@@ -72,10 +72,6 @@
       # Zoxide initialisieren (besseres cd)
       eval "$(zoxide init zsh)"
       
-      # TheFuck initialisieren mit "okay" Alias
-      # "okay" ist sicherer als "yes" (vermeidet Konflikt mit Unix-Befehl)
-      eval "$(thefuck --alias okay)"
-      
       # FZF Key Bindings
       source ${pkgs.fzf}/share/fzf/key-bindings.zsh
       source ${pkgs.fzf}/share/fzf/completion.zsh
