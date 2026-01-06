@@ -1,0 +1,28 @@
+# Hardware-spezifisch (jedes Gerät anders)
+hardware-configuration.nix
+hardware-configuration-*.nix
+
+# Build-Artefakte
+result
+result-*
+
+# Private Keys (NICHT committen!)
+*.key
+*.pem
+id_rsa
+id_ed25519
+!id_ed25519.pub
+
+# WICHTIG: Verschlüsselte Secrets sind OK!
+# secrets/*.yaml sind mit sops verschlüsselt und sicher
+# Diese werden committed!
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Temporäre Dateien
+*.tmp
+*.bak
