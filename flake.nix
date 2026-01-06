@@ -17,6 +17,7 @@
       vmware = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
+          sops-nix.nixosModules.sops
           ./hardware-configuration.nix
           ./configuration.nix
           ./sops.nix
@@ -36,6 +37,7 @@
       virtualbox = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
+          sops-nix.nixosModules.sops
           ./hardware-configuration.nix
           ./configuration.nix
           ./sops.nix
@@ -54,6 +56,7 @@
       laptop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
+          sops-nix.nixosModules.sops
           ./hardware-configuration-laptop.nix
           ./configuration.nix
           ./sops.nix
@@ -72,6 +75,7 @@
       desktop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
+          sops-nix.nixosModules.sops
           ./hardware-configuration-desktop.nix
           ./configuration.nix
           ./sops.nix
