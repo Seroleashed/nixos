@@ -103,8 +103,13 @@ nix-shell -p git --run "
   git config --global user.name '$GIT_NAME'
   git config --global user.email '$GIT_EMAIL'
   git init 2>/dev/null || true
-  echo 'hardware-configuration.nix' >> .gitignore
+  
+  # WICHTIG: hardware-configuration.nix explizit hinzufügen (auch wenn in .gitignore)
+  git add -f hardware-configuration.nix
+  
+  # Alle anderen Dateien hinzufügen
   git add .
+  
   git commit -m 'Initial NixOS configuration' 2>/dev/null || true
   git remote add origin https://github.com/${GITHUB_USER}/${GITHUB_REPO}.git 2>/dev/null || true
 "
