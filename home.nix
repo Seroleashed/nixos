@@ -19,23 +19,25 @@
   # Git Configuration (mit gh Integration)
   programs.git = {
     enable = true;
-    userName = "Seroleashed";  # ANPASSEN!
-    userEmail = "dsilorenz@mail.com";  # ANPASSEN!
-    
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Seroleashed";  # ANPASSEN!
+        email = "dsilorenz@mail.com";  # ANPASSEN!
+      };
+      
       init.defaultBranch = "main";
       pull.rebase = false;
       credential.helper = "store";  # Optional: Speichert Credentials
-    };
     
-    aliases = {
-      st = "status";
-      co = "checkout";
-      br = "branch";
-      ci = "commit";
-      unstage = "reset HEAD --";
-      last = "log -1 HEAD";
-      visual = "log --graph --oneline --all";
+      alias = {
+        st = "status";
+        co = "checkout";
+        br = "branch";
+        ci = "commit";
+        unstage = "reset HEAD --";
+        last = "log -1 HEAD";
+        visual = "log --graph --oneline --all";
+      };
     };
   };
 
@@ -123,7 +125,7 @@
       find = "fd";
     };
     
-    initExtra = ''
+    initContent = ''
       # Disable Ctrl+S (flow control)
       stty -ixon
       
@@ -323,22 +325,25 @@
   # VS Code Settings (optional)
   programs.vscode = {
     enable = true;
+
+    profiles.default = {
     
-    userSettings = {
-      "editor.fontSize" = 14;
-      "editor.fontFamily" = "'FiraMono Nerd Font', 'Droid Sans Mono', 'monospace'";
-      "workbench.colorTheme" = "Default Dark Modern";
-      "terminal.integrated.fontFamily" = "'FiraMono Nerd Font'";
-      "editor.formatOnSave" = true;
-      "files.autoSave" = "afterDelay";
+      userSettings = {
+        "editor.fontSize" = 14;
+        "editor.fontFamily" = "'FiraMono Nerd Font', 'Droid Sans Mono', 'monospace'";
+        "workbench.colorTheme" = "Default Dark Modern";
+        "terminal.integrated.fontFamily" = "'FiraMono Nerd Font'";
+        "editor.formatOnSave" = true;
+        "files.autoSave" = "afterDelay";
+      };
+    
+      extensions = with pkgs.vscode-extensions; [
+        # Beispiel-Extensions (kannst du erweitern)
+        # vscodevim.vim
+        # ms-python.python
+        # rust-lang.rust-analyzer
+      ];
     };
-    
-    extensions = with pkgs.vscode-extensions; [
-      # Beispiel-Extensions (kannst du erweitern)
-      # vscodevim.vim
-      # ms-python.python
-      # rust-lang.rust-analyzer
-    ];
   };
 
   # XDG Base Directories
