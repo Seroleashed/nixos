@@ -140,7 +140,7 @@
     # Automatische Optimierung des Nix Stores (spart Speicherplatz durch Hardlinks)
     auto-optimise-store = true;
     
-    # Experimentelle Features (optional, aber nützlich)
+    # Experimentelle Features (WICHTIG für Flakes und Home Manager!)
     experimental-features = [ "nix-command" "flakes" ];
   };
 
