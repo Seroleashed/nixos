@@ -5,11 +5,6 @@ set -e
 echo "═══════════════════════════════════════════════════════════"
 echo " NixOS Bootstrap Installation (Öffentliches Repository)"
 echo "═══════════════════════════════════════════════════════════"
-echo ""
-
-# GitHub-Daten
-read -p "GitHub Username: " GITHUB_USER
-read -p "Repository Name: " GITHUB_REPO
 
 # Device Type
 echo ""
@@ -40,7 +35,7 @@ echo ""
 echo "[1/10] Lade Git temporär..."
 # Repository klonen (öffentlich, kein Token!)
 echo "[2/10] Clone Repository..."
-nix-shell -p git --run "git clone https://github.com/${GITHUB_USER}/${GITHUB_REPO}.git /tmp/nixos-config"
+nix-shell -p git --run "git clone https://github.com/Seroleashed/nixos.git /tmp/nixos-config"
 
 # Hardware-Config sichern
 echo "[3/10] Sichere Hardware-Config..."
@@ -90,6 +85,8 @@ cd /etc/nixos
 
 # Git in nix-shell verfügbar machen für die folgenden Befehle
 nix-shell -p git --run "
+  git config --global user.email '$GIT_EMAIL'
+  git config --global user.name '$GIT_NAME'
   git init 2>/dev/null || true
   git add .
   git commit -m 'Initial NixOS configuration' 2>/dev/null || true
