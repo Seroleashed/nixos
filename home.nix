@@ -19,8 +19,8 @@
   # Git Configuration (mit gh Integration)
   programs.git = {
     enable = true;
-    userName = "Dein Name";  # ANPASSEN!
-    userEmail = "deine@email.de";  # ANPASSEN!
+    userName = "Seroleashed";  # ANPASSEN!
+    userEmail = "dsilorenz@mail.com";  # ANPASSEN!
     
     extraConfig = {
       init.defaultBranch = "main";
@@ -48,7 +48,7 @@
       git_protocol = "https";
       
       # Editor für gh
-      editor = "nano";  # Oder "vim", "code", etc.
+      editor = "code --wait";  # Oder "vim", "nano", etc.
       
       # Prompt für Git credentials
       prompt = "enabled";
