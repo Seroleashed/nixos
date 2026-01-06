@@ -11,7 +11,6 @@
     starship
     zoxide
     fzf
-    thefuck  # Korrigiert falsche Befehle
     ripgrep  # Besseres grep, wird von fzf verwendet
     bat      # Besseres cat mit Syntax-Highlighting
     eza      # Besseres ls
