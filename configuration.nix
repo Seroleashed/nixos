@@ -8,10 +8,24 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    
     # Modular configuration files
     ./packages.nix
     ./programs.nix
-  ];
+    ./device.nix  # Device type definition
+    
+    # Device-specific configuration (conditional import)
+    # Wird automatisch basierend auf device.nix geladen
+  ] ++ (
+    # Conditional imports based on device type
+    let 
+      deviceType = (import ./device.nix { inherit config lib pkgs; }).config.device.type or "desktop";
+    in
+    lib.optional (deviceType == "vmware") ./vmware.nix ++
+    lib.optional (deviceType == "virtualbox") ./virtualbox.nix ++
+    lib.optional (deviceType == "laptop") ./laptop.nix ++
+    lib.optional (deviceType == "desktop") ./desktop.nix
+  );
 
   # Bootloader
   boot.loader.systemd-boot.enable = true;
@@ -38,10 +52,21 @@
 
   # Display Manager and Desktop Environment
   services.displayManager.sddm.enable = true;
+  services.displayManager.sddm.wayland.enable = true;
+  
   services.desktopManager.plasma6.enable = true;
   
   # Wayland-spezifische Einstellungen
   services.displayManager.defaultSession = "plasma";
+  
+  # KDE/Plasma Systemeinstellungen
+  programs.dconf.enable = true;  # Benötigt für GTK-Apps
+  
+  # SDDM Theme (Login-Screen)
+  services.displayManager.sddm = {
+    theme = "breeze";  # Breeze Dark ist der Standard
+    # Weitere Theme-Optionen möglich
+  };
   
   # X11 ist für Plasma 6 Wayland nicht nötig, aber einige Anwendungen brauchen XWayland
   services.xserver = {
