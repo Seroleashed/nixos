@@ -19,6 +19,7 @@
         modules = [
           ./hardware-configuration.nix
           ./configuration.nix
+          ./sops.nix
           { device.type = "vmware"; }
           
           # Home Manager Integration
@@ -37,6 +38,7 @@
         modules = [
           ./hardware-configuration.nix
           ./configuration.nix
+          ./sops.nix
           { device.type = "virtualbox"; }
           
           home-manager.nixosModules.home-manager
@@ -54,6 +56,7 @@
         modules = [
           ./hardware-configuration-laptop.nix
           ./configuration.nix
+          ./sops.nix
           { device.type = "laptop"; }
           
           home-manager.nixosModules.home-manager
@@ -71,6 +74,7 @@
         modules = [
           ./hardware-configuration-desktop.nix
           ./configuration.nix
+          ./sops.nix
           { device.type = "desktop"; }
           
           home-manager.nixosModules.home-manager
