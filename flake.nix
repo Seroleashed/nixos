@@ -15,7 +15,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager }: {
+  outputs = { self, nixpkgs, sops-nix, home-manager }: {
     nixosConfigurations = {
       # VMware VM
       vmware = nixpkgs.lib.nixosSystem {
