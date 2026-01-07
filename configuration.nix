@@ -11,7 +11,6 @@
     
     # Modular configuration files
     ./packages.nix
-    ./programs.nix
     ./device.nix  # Device type definition
     
     # Device-specific configuration (conditional import)
