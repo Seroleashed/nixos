@@ -21,12 +21,13 @@
   # Git Configuration (mit gh Integration)
   programs.git = {
     enable = true;
-    user = {
-      name = "Seroleashed";
-      email = "dsilorenz@gmail.com";
-    };
 
     settings = {
+      user = {
+        name = "Seroleashed";
+        email = "dsilorenz@gmail.com";
+      };
+
       init.defaultBranch = "main";
       pull.rebase = false;
       credential.helper = "store";
@@ -40,6 +41,99 @@
         last = "log -1 HEAD";
         visual = "log --graph --oneline --all";
       };
+    };
+  };
+
+  programs.plasma = {
+    enable = true;
+
+    workspace = {
+      clickItemTo = "open";
+      lookAndFeel = "org.kde.breezedark.desktop";
+    };
+
+    input.keyboard = {
+      numlockOnStartup = "on";
+    };
+
+    shortcuts = {
+      kwin."Window Quick Tile Bottom" = "Meta+Down";
+      kwin."Window Quick Tile Bottom Left" = [ ];
+      kwin."Window Quick Tile Bottom Right" = [ ];
+      kwin."Window Quick Tile Left" = "Meta+Left";
+      kwin."Window Quick Tile Right" = "Meta+Right";
+      kwin."Window Quick Tile Top" = "Meta+Up";
+      kwin."Window Quick Tile Top Left" = [ ];
+      kwin."Window Quick Tile Top Right" = [ ];
+    };
+
+    kwin = {
+      effects = {
+        blur = {
+          enable = true;
+          noiseStrength = 0;
+          strength = 6;
+        };
+
+        slideBack.enable = true;
+        translucency.enable = true;
+        wobblyWindows.enable = true;
+      };
+    };
+
+    session = {
+      general.askForConfirmationOnLogout = false;
+      sessionRestore.restoreOpenApplicationsOnLogin = "onLastLogout";
+    };
+
+    krunner = {
+      position = "center";
+    };
+
+    fonts = {
+      general = {
+        family = "FiraMono";
+        pointSize = 11;
+      };
+    };
+
+    powerdevil = {
+      AC = {
+        powerButtonAction = "lockScreen";
+        autoSuspend = {
+          action = "shutDown";
+          idleTimeout = 1000;
+        };
+        turnOffDisplay = {
+          idleTimeout = 1000;
+          idleTimeoutWhenLocked = "immediately";
+        };
+      };
+      battery = {
+        powerButtonAction = "sleep";
+        whenSleepingEnter = "standbyThenHibernate";
+      };
+      lowBattery = {
+        whenLaptopLidClosed = "hibernate";
+      };
+    };
+
+    configFile = {
+      kdeglobals."KFileDialog Settings"."Allow Expansion" = false;
+      kdeglobals."KFileDialog Settings"."Automatically select filename extension" = true;
+      kdeglobals."KFileDialog Settings"."Breadcrumb Navigation" = true;
+      kdeglobals."KFileDialog Settings"."Decoration position" = 2;
+      kdeglobals."KFileDialog Settings"."Show Full Path" = true;
+      kdeglobals."KFileDialog Settings"."Show Inline Previews" = true;
+      kdeglobals."KFileDialog Settings"."Show Preview" = false;
+      kdeglobals."KFileDialog Settings"."Show Speedbar" = true;
+      kdeglobals."KFileDialog Settings"."Show hidden files" = true;
+      kdeglobals."KFileDialog Settings"."Sort by" = "Name";
+      kdeglobals."KFileDialog Settings"."Sort directories first" = true;
+      kdeglobals."KFileDialog Settings"."Sort hidden files last" = false;
+      kdeglobals."KFileDialog Settings"."Sort reversed" = false;
+      kdeglobals."KFileDialog Settings"."Speedbar Width" = 192;
+      kdeglobals."KFileDialog Settings"."View Style" = "DetailTree";
     };
   };
 
