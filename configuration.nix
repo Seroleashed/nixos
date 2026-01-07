@@ -52,7 +52,6 @@
   # Display Manager and Desktop Environment
   services.displayManager.sddm.enable = true;
   services.displayManager.sddm.wayland.enable = true;
-  
   services.desktopManager.plasma6.enable = true;
   
   # Wayland-spezifische Einstellungen
@@ -63,9 +62,11 @@
   
   # SDDM Theme (Login-Screen)
   services.displayManager.sddm = {
-    theme = "breeze";  # Breeze Dark ist der Standard
+    theme = "sddm-sugar-dark";  # Breeze Dark ist der Standard
     # Weitere Theme-Optionen möglich
   };
+
+
   
   # X11 ist für Plasma 6 Wayland nicht nötig, aber einige Anwendungen brauchen XWayland
   services.xserver = {
@@ -166,6 +167,12 @@
   # Für KDE Plasma: Power Management Settings werden über systemsettings5 konfiguriert,
   # aber wir können Screen Locking global deaktivieren
   programs.kde-pim.enable = false;
+
+  environment.systemPackages = with pkgs; [
+    sddm-sugar-dark
+    kdePackages.qtsvg
+    kdePackages.qtmultimedia
+  ];
   
   # Umgebungsvariablen für bessere Wayland-Kompatibilität
   environment.sessionVariables = {
