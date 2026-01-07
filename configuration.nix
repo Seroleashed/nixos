@@ -109,6 +109,7 @@
   };
 
   users.defaultUserShell = pkgs.zsh;
+  programs.zsh.enable = true;
 
   # Fonts
   fonts.packages = with pkgs; [
