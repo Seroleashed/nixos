@@ -6,21 +6,27 @@
 
   # Home Manager Version (muss mit NixOS-Version kompatibel sein)
   home.stateVersion = "25.11";
+
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
+
   # User-spezifische Pakete (zusätzlich zu system packages)
   home.packages = with pkgs; [
     # Wird später erweitert falls nötig
   ];
+
+  # Firefox
+  programs.firefox.enable = true;
+
   # Git Configuration (mit gh Integration)
   programs.git = {
     enable = true;
-    settings = {
-      user = {
-        name = "Seroleashed";
-        email = "dsilorenz@gmail.com";
-      };
+    user = {
+      name = "Seroleashed";
+      email = "dsilorenz@gmail.com";
+    };
 
+    settings = {
       init.defaultBranch = "main";
       pull.rebase = false;
       credential.helper = "store";
@@ -36,31 +42,28 @@
       };
     };
   };
+
   # GitHub CLI (gh)
   programs.gh = {
     enable = true;
 
     settings = {
-      # Git protocol
       git_protocol = "https";
-
-      # Editor für gh
       editor = "code --wait";
-
-      # Prompt für Git credentials
       prompt = "enabled";
     };
 
-    # Extensions (optional)
     extensions = with pkgs; [
       # gh-dash  # GitHub Dashboard
     ];
   };
+
   # Bash (als Fallback)
   programs.bash = {
     enable = true;
     shellAliases = config.programs.zsh.shellAliases or {};
   };
+
   # Zsh (Home Manager übernimmt die Konfiguration)
   programs.zsh = {
     enable = true;
@@ -130,13 +133,34 @@
 
       # Starship Prompt
       eval "$(starship init zsh)"
+
+      # FZF mit bat preview
+      export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+      export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+      export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --preview 'bat --style=numbers --color=always {}' --preview-window=right:60%"
+
+      # Bessere Completion
+      setopt AUTO_MENU
+      setopt COMPLETE_IN_WORD
+      setopt ALWAYS_TO_END
+
+      # History Optionen
+      setopt HIST_IGNORE_ALL_DUPS
+      setopt HIST_SAVE_NO_DUPS
+      setopt HIST_REDUCE_BLANKS
+      setopt HIST_VERIFY
+      setopt SHARE_HISTORY
+
+      # Sonstiges
+      setopt AUTO_CD
+      setopt CORRECT
     '';
 
-    # Zsh Optionen
     oh-my-zsh = {
-      enable = false;  # Wir nutzen eigene Config
+      enable = false;
     };
   };
+
   # Starship Prompt
   programs.starship = {
     enable = true;
@@ -179,6 +203,7 @@
       };
     };
   };
+
   # FZF
   programs.fzf = {
     enable = true;
@@ -193,11 +218,13 @@
       "--preview-window=right:60%"
     ];
   };
+
   # Zoxide (besseres cd)
   programs.zoxide = {
     enable = true;
     enableZshIntegration = true;
   };
+
   # Bat (besseres cat)
   programs.bat = {
     enable = true;
@@ -206,13 +233,15 @@
       pager = "less -FR";
     };
   };
-  # Eza (besseres ls) - Konfiguration
+
+  # Eza (besseres ls)
   programs.eza = {
     enable = true;
     enableZshIntegration = true;
     git = true;
     icons = "auto";
   };
+
   # Tmux
   programs.tmux = {
     enable = true;
@@ -267,6 +296,7 @@
       set -ga terminal-overrides ",xterm-256color:Tc"
     '';
   };
+
   # Kitty Terminal Configuration
   programs.kitty = {
     enable = true;
@@ -325,11 +355,11 @@
       "ctrl+shift+enter" = "new_window";
     };
   };
-  # VS Code Settings (optional)
+
+  # VS Code
   programs.vscode = {
     enable = true;
     profiles.default = {
-
       userSettings = {
         "editor.fontSize" = 14;
         "editor.fontFamily" = "'FiraMono Nerd Font', 'Droid Sans Mono', 'monospace'";
@@ -347,6 +377,7 @@
       ];
     };
   };
+
   # XDG Base Directories
   xdg = {
     enable = true;
