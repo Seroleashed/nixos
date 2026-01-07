@@ -3,7 +3,6 @@
 {
   environment.systemPackages = with pkgs; [
     # Terminal und Shell
-    ghostty  # Für echte Hardware (funktioniert nicht in VirtualBox)
     zsh
     tmux
     
