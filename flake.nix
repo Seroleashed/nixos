@@ -13,9 +13,15 @@
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
-  outputs = { self, nixpkgs, sops-nix, home-manager }: {
+  outputs = { self, nixpkgs, sops-nix, home-manager, plasma-manager, ... }: {
     nixosConfigurations = {
       # VMware VM
       vmware = nixpkgs.lib.nixosSystem {
@@ -36,6 +42,7 @@
 
             home-manager.sharedModules = [
               sops-nix.homeManagerModules.sops
+              plasma-manager.homeModules.plasma-manager
             ];
             home-manager.users.stinooo = import ./home.nix;
           }
@@ -60,6 +67,7 @@
 
             home-manager.sharedModules = [
               sops-nix.homeManagerModules.sops
+              plasma-manager.homeModules.plasma-manager
             ];
             home-manager.users.stinooo = import ./home.nix;
           }
@@ -84,6 +92,7 @@
 
             home-manager.sharedModules = [
               sops-nix.homeManagerModules.sops
+              plasma-manager.homeModules.plasma-manager
             ];
             home-manager.users.stinooo = import ./home.nix;
           }
@@ -108,6 +117,7 @@
 
             home-manager.sharedModules = [
               sops-nix.homeManagerModules.sops
+              plasma-manager.homeModules.plasma-manager
             ];
             home-manager.users.stinooo = import ./home.nix;
           }
