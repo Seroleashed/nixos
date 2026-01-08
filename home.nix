@@ -95,22 +95,23 @@
     };
     powerdevil = {
       AC = {
+        whenLaptopLidClosed = "sleep";
         powerButtonAction = "lockScreen";
         autoSuspend = {
-          action = "shutDown";
-          idleTimeout = 1000;
+          action = "sleep";
+          idleTimeout = 1500;
         };
-        turnOffDisplay = {
-          idleTimeout = 1000;
-          idleTimeoutWhenLocked = "immediately";
-        };
+        powerProfile = "performance";
       };
       battery = {
+        whenLaptopLidClosed = "sleep";
         powerButtonAction = "sleep";
         whenSleepingEnter = "standbyThenHibernate";
+        powerProfile = "balanced";
       };
       lowBattery = {
         whenLaptopLidClosed = "hibernate";
+        powerProfile = "powerSaving";
       };
     };
     configFile = {
@@ -169,6 +170,12 @@
       share = true;
     };
 
+    oh-my-zsh = {
+      enable = true;
+
+      plugins = ["tmux" "bun" "colorize" "docker" "docker-compose" "dotenv" "emoji" "fzf" "gh" "git" "git-auto-fetch" "git-commit" "gitfast" "golang" "kitty" "pip" "ssh" "starship" "tailscale" "uv" "vi-mode" "virtualenv" "vscode" "zoxide"];
+    };
+
     shellAliases = {
       # System
       ll = "eza -l --icons";
@@ -211,14 +218,34 @@
     };
 
     initContent = ''
+      # Ensure the plugin is loaded
+      plugins=(tmux)
+
+      # Set autostart before sourcing oh-my-zsh
+      ZSH_TMUX_AUTOSTART=true
+      ZSH_TMUX_AUTOCONNECT=true
+      ZSH_TMUX_AUTOQUIT=true
+
+      # Source oh-my-zsh
+      source $ZSH/oh-my-zsh.sh
+
       # Disable Ctrl+S (flow control)
       stty -ixon
+
+      # Aliases auch mit sudo verfügbar machen
+      alias sudo='sudo '
 
       # Zoxide initialisieren (besseres cd)
       eval "$(zoxide init zsh)"
 
       # Starship Prompt
       eval "$(starship init zsh)"
+
+      # pay-respects
+      eval "$(pay-respects zsh --alias okay)"
+
+      # navi for command cheatsheets
+      eval "$(navi widget zsh)"
 
       # FZF mit bat preview
       export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
@@ -241,10 +268,12 @@
       setopt AUTO_CD
       setopt CORRECT
     '';
+  };
 
-    oh-my-zsh = {
-      enable = false;
-    };
+  programs.kitty.settings = {
+    detect_urls = "yes";
+    url_style = "curly";
+    show_hyperlink_targets = "yes";
   };
 
   # Starship Prompt
@@ -262,8 +291,8 @@
       };
 
       directory = {
-        truncation_length = 3;
-        truncate_to_repo = true;
+        truncation_length = 0;
+        truncate_to_repo = false;
       };
 
       git_branch = {
@@ -275,12 +304,12 @@
         ahead = "⇡\${count}";
         behind = "⇣\${count}";
         diverged = "⇕⇡\${ahead_count}⇣\${behind_count}";
-        untracked = "🤷 ";
-        stashed = "📦 ";
-        modified = "📝 ";
-        staged = "✅ ";
-        renamed = "👅 ";
-        deleted = "🗑️ ";
+        untracked = " ($count)🤷";
+        stashed = " ($count)📦";
+        modified = " ($count)📝";
+        staged = " [++($count)]✅";
+        renamed = " ($count)👅";
+        deleted = " ($count) 🗑️";
       };
 
       cmd_duration = {
@@ -335,6 +364,27 @@
     keyMode = "vi";
     terminal = "screen-256color";
 
+    plugins = with pkgs.tmuxPlugins; [
+      {
+        plugin = catppuccin;
+        extraConfig = ''
+          set -g @catppuccin_flavour 'mocha'
+          set -g @catppuccin_window_status_style 'rounded'
+          set -g @catppuccin_status_modules_left 'session'
+          set -g @catppuccin_status_modules_right 'directory date_time'
+          set -g @catppuccin_window_current_text '#{window_name}'
+          set -g @catppuccin_directory_text '#{pane_current_path}'
+        '';
+      }
+      {
+        plugin = continuum;
+        extraConfig = ''
+          set -g @continuum-restore 'on'
+          set -g @continuum-save-interval '60'
+        '';
+      }
+    ];
+
     extraConfig = ''
       # Bessere Prefix-Taste (Ctrl+a statt Ctrl+b)
       set -g prefix C-a
@@ -380,6 +430,12 @@
       # Bessere Farben
       set -g default-terminal "screen-256color"
       set -ga terminal-overrides ",xterm-256color:Tc"
+
+      # vorherige Session wiederherstellen
+      set -g @continuum-boot 'on'
+
+      set -g status-interval 1
+      set-option -g focus-events on
     '';
   };
 
