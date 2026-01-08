@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   # Home Manager Basics
   home.username = "stinooo";
   home.homeDirectory = "/home/stinooo";
@@ -12,7 +15,9 @@
 
   # User-spezifische Pakete (zusätzlich zu system packages)
   home.packages = with pkgs; [
-    # Wird später erweitert falls nötig
+    # Nix Language Server für VS Code
+    nil
+    alejandra
   ];
 
   # Firefox
@@ -21,7 +26,6 @@
   # Git Configuration (mit gh Integration)
   programs.git = {
     enable = true;
-
     settings = {
       user = {
         name = "Seroleashed";
@@ -44,29 +48,26 @@
     };
   };
 
+  # Plasma Manager Configuration
   programs.plasma = {
     enable = true;
-
     workspace = {
       clickItemTo = "open";
       lookAndFeel = "org.kde.breezedark.desktop";
     };
-
     input.keyboard = {
       numlockOnStartup = "on";
     };
-
     shortcuts = {
       kwin."Window Quick Tile Bottom" = "Meta+Down";
-      kwin."Window Quick Tile Bottom Left" = [ ];
-      kwin."Window Quick Tile Bottom Right" = [ ];
+      kwin."Window Quick Tile Bottom Left" = [];
+      kwin."Window Quick Tile Bottom Right" = [];
       kwin."Window Quick Tile Left" = "Meta+Left";
       kwin."Window Quick Tile Right" = "Meta+Right";
       kwin."Window Quick Tile Top" = "Meta+Up";
-      kwin."Window Quick Tile Top Left" = [ ];
-      kwin."Window Quick Tile Top Right" = [ ];
+      kwin."Window Quick Tile Top Left" = [];
+      kwin."Window Quick Tile Top Right" = [];
     };
-
     kwin = {
       effects = {
         blur = {
@@ -74,29 +75,24 @@
           noiseStrength = 0;
           strength = 6;
         };
-
         slideBack.enable = true;
         translucency.enable = true;
         wobblyWindows.enable = true;
       };
     };
-
     session = {
       general.askForConfirmationOnLogout = false;
       sessionRestore.restoreOpenApplicationsOnLogin = "onLastLogout";
     };
-
     krunner = {
       position = "center";
     };
-
     fonts = {
       general = {
         family = "FiraMono";
         pointSize = 11;
       };
     };
-
     powerdevil = {
       AC = {
         powerButtonAction = "lockScreen";
@@ -117,7 +113,6 @@
         whenLaptopLidClosed = "hibernate";
       };
     };
-
     configFile = {
       kdeglobals."KFileDialog Settings"."Allow Expansion" = false;
       kdeglobals."KFileDialog Settings"."Automatically select filename extension" = true;
@@ -221,9 +216,6 @@
 
       # Zoxide initialisieren (besseres cd)
       eval "$(zoxide init zsh)"
-
-      # TheFuck initialisieren mit "okay" Alias
-      eval "$(thefuck --alias okay)"
 
       # Starship Prompt
       eval "$(starship init zsh)"
@@ -450,25 +442,231 @@
     };
   };
 
-  # VS Code
+  # VS Code - Vollständige Entwicklungsumgebung
   programs.vscode = {
     enable = true;
-    profiles.default = {
-      userSettings = {
-        "editor.fontSize" = 14;
-        "editor.fontFamily" = "'FiraMono Nerd Font', 'Droid Sans Mono', 'monospace'";
-        "workbench.colorTheme" = "Default Dark Modern";
-        "terminal.integrated.fontFamily" = "'FiraMono Nerd Font'";
-        "editor.formatOnSave" = true;
-        "files.autoSave" = "afterDelay";
+
+    mutableExtensionsDir = false;
+
+    profiles.default.extensions = with pkgs.vscode-extensions; [
+      # Python
+      ms-python.python
+      ms-python.vscode-pylance
+      ms-python.debugpy
+
+      # JavaScript/TypeScript
+      dbaeumer.vscode-eslint
+      esbenp.prettier-vscode
+
+      # Rust
+      rust-lang.rust-analyzer
+
+      # Go
+      golang.go
+
+      # Nix
+      jnoortheen.nix-ide
+
+      # PHP
+      bmewburn.vscode-intelephense-client
+      #devsense.profiler-php-vscode
+
+      # Git
+      #eamodio.gitlens
+      #mhutchie.git-graph
+
+      # Remote Development
+      ms-vscode-remote.remote-ssh
+      ms-vscode-remote.remote-containers
+
+      # API Testing
+      humao.rest-client
+
+      # UI/UX
+      pkief.material-icon-theme
+      usernamehw.errorlens
+
+      # Utilities
+      aaron-bond.better-comments
+      christian-kohler.path-intellisense
+      editorconfig.editorconfig
+
+      # Claude Code (falls verfügbar)
+      # anthropic.claude-code
+    ];
+
+    profiles.default.userSettings = {
+      # Editor Basics
+      "editor.fontSize" = 14;
+      "editor.fontFamily" = "'FiraMono Nerd Font', 'Droid Sans Mono', 'monospace'";
+      "editor.fontLigatures" = true;
+      "editor.formatOnSave" = true;
+      "editor.formatOnPaste" = true;
+      "editor.tabSize" = 2;
+      "editor.insertSpaces" = true;
+      "editor.detectIndentation" = true;
+      "editor.bracketPairColorization.enabled" = true;
+      "editor.guides.bracketPairs" = true;
+      "editor.minimap.enabled" = true;
+      "editor.rulers" = [80 120];
+      "editor.wordWrap" = "on";
+      "editor.suggestSelection" = "first";
+      "editor.inlineSuggest.enabled" = true;
+      "editor.quickSuggestions" = {
+        "other" = true;
+        "comments" = false;
+        "strings" = true;
       };
 
-      extensions = with pkgs.vscode-extensions; [
-        # Beispiel-Extensions (kannst du erweitern)
-        # vscodevim.vim
-        # ms-python.python
-        # rust-lang.rust-analyzer
+      # Theme & Icons
+      "workbench.colorTheme" = "Default Dark Modern";
+      "workbench.iconTheme" = "material-icon-theme";
+
+      # Terminal
+      "terminal.integrated.fontFamily" = "'FiraMono Nerd Font'";
+      "terminal.integrated.fontSize" = 13;
+      "terminal.integrated.defaultProfile.linux" = "zsh";
+      "terminal.external.linuxExec" = "kitty";
+
+      # Files
+      "files.autoSave" = "afterDelay";
+      "files.autoSaveDelay" = 1000;
+      "files.trimTrailingWhitespace" = true;
+      "files.insertFinalNewline" = true;
+
+      # Git
+      "git.autofetch" = true;
+      "git.confirmSync" = false;
+      "git.enableSmartCommit" = true;
+      "gitlens.advanced.messages"."suppressCommitHasNoPreviousCommitWarning" = true;
+
+      # Python
+      "python.defaultInterpreterPath" = "python3";
+      "python.linting.enabled" = true;
+      "python.linting.pylintEnabled" = false;
+      "python.linting.ruffEnabled" = true;
+      "python.formatting.provider" = "black";
+      "python.languageServer" = "Pylance";
+      "python.analysis.typeCheckingMode" = "basic";
+      "python.analysis.autoImportCompletions" = true;
+      "[python]" = {
+        "editor.defaultFormatter" = "ms-python.black-formatter";
+        "editor.formatOnSave" = true;
+        "editor.codeActionsOnSave" = {
+          "source.organizeImports" = "explicit";
+        };
+      };
+
+      # JavaScript/TypeScript
+      "javascript.updateImportsOnFileMove.enabled" = "always";
+      "typescript.updateImportsOnFileMove.enabled" = "always";
+      "eslint.enable" = true;
+      "eslint.validate" = ["javascript" "javascriptreact" "typescript" "typescriptreact"];
+      "[javascript]" = {
+        "editor.defaultFormatter" = "esbenp.prettier-vscode";
+      };
+      "[javascriptreact]" = {
+        "editor.defaultFormatter" = "esbenp.prettier-vscode";
+      };
+      "[typescript]" = {
+        "editor.defaultFormatter" = "esbenp.prettier-vscode";
+      };
+      "[typescriptreact]" = {
+        "editor.defaultFormatter" = "esbenp.prettier-vscode";
+      };
+
+      # Prettier
+      "prettier.singleQuote" = true;
+      "prettier.trailingComma" = "es5";
+      "prettier.semi" = true;
+
+      # Rust
+      "rust-analyzer.checkOnSave.command" = "clippy";
+      "rust-analyzer.inlayHints.enable" = true;
+      "[rust]" = {
+        "editor.defaultFormatter" = "rust-lang.rust-analyzer";
+      };
+
+      # Go
+      "go.useLanguageServer" = true;
+      "go.toolsManagement.autoUpdate" = true;
+      "[go]" = {
+        "editor.formatOnSave" = true;
+        "editor.codeActionsOnSave" = {
+          "source.organizeImports" = "explicit";
+        };
+      };
+
+      # Lua
+      "[lua]" = {
+        "editor.defaultFormatter" = "sumneko.lua";
+      };
+
+      # Nix
+      "nix.enableLanguageServer" = true;
+      "nix.serverPath" = "nil";
+      "nix.serverSettings" = {
+        "nil" = {
+          "formatting" = {
+            "command" = ["alejandra"];
+          };
+        };
+      };
+      "nix.formatterPath" = "alejandra";
+      "[nix]" = {
+        "editor.defaultFormatter" = "jnoortheen.nix-ide";
+        "editor.formatOnSave" = true;
+        "editor.tabSize" = 2;
+      };
+      # Explizite Datei-Assoziationen
+      "files.associations" = {
+        "*.nix" = "nix";
+        "flake.lock" = "json";
+      };
+
+      # PHP
+      "php.suggest.basic" = false;
+      "php.validate.enable" = false;
+      "intelephense.format.enable" = true;
+      "[php]" = {
+        "editor.defaultFormatter" = "bmewburn.vscode-intelephense-client";
+      };
+
+      # Error Lens
+      "errorLens.enabledDiagnosticLevels" = ["error" "warning" "info"];
+
+      # Better Comments
+      "better-comments.tags" = [
+        {
+          "tag" = "!";
+          "color" = "#FF2D00";
+        }
+        {
+          "tag" = "?";
+          "color" = "#3498DB";
+        }
+        {
+          "tag" = "//";
+          "color" = "#474747";
+        }
+        {
+          "tag" = "todo";
+          "color" = "#FF8C00";
+        }
+        {
+          "tag" = "*";
+          "color" = "#98C379";
+        }
       ];
+
+      # Remote Development
+      "remote.SSH.remotePlatform" = {
+        "localhost" = "linux";
+      };
+
+      # Debug
+      "debug.console.fontSize" = 13;
+      "debug.console.fontFamily" = "'FiraMono Nerd Font'";
     };
   };
 
@@ -481,4 +679,15 @@
       createDirectories = true;
     };
   };
+
+  # Session Variables für konsistenten PATH
+  home.sessionVariables = {
+    # Stelle sicher dass Home Manager Binaries im PATH sind
+    # (wichtig für VS Code vom Application Menu)
+  };
+
+  # Expliziter PATH für Programme die nicht von der Shell starten
+  home.sessionPath = [
+    "$HOME/.nix-profile/bin"
+  ];
 }
