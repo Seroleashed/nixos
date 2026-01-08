@@ -30,6 +30,10 @@
     # System-Tools
     htop
     neofetch
+    sops
+    age
+    ssh-to-age
+
 
     # Hilfreich für Debugging
     wayland-utils

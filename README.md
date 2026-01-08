@@ -6,8 +6,8 @@ Meine persönliche NixOS-Konfiguration mit Home Manager, sops-nix und Device-Typ
 
 - ✅ **Flakes-basiert** - Moderne NixOS-Konfiguration
 - ✅ **Home Manager** - User-Konfiguration (Git, Zsh, etc.)
-- ✅ **sops-nix** - Verschlüsselte Secrets im Repository
-- ✅ **Device-Types** - Unterstützung für VMware, VirtualBox, Laptop, Desktop
+- ✅ **sops-nix** - Verschlüsselte Secrets im Repository, um direkt alle Passwörter, etc. verfügbar zu haben
+- ✅ **Device-Types** - Unterstützung für VMware, Raspberry Pi 4 (TODO), Laptop, Desktop
 - ✅ **Modular** - Klare Trennung in einzelne Module
 
 ## Struktur
@@ -16,70 +16,35 @@ Meine persönliche NixOS-Konfiguration mit Home Manager, sops-nix und Device-Typ
 .
 ├── flake.nix                  # Flake Definition
 ├── configuration.nix          # System-Konfiguration
-├── home.nix                   # Home Manager Config
+├── home.nix                   # Home Manager Config inkl. Programmen
 ├── packages.nix               # System-Pakete
-├── programs.nix               # Programme
 ├── device.nix                 # Device-Type
 ├── vmware.nix                 # VMware-spezifisch
-├── virtualbox.nix             # VirtualBox-spezifisch
 ├── laptop.nix                 # Laptop-spezifisch
 ├── desktop.nix                # Desktop-spezifisch
 ├── .sops.yaml                 # sops Konfiguration
 ├── secrets/                   # Verschlüsselte Secrets
 │   └── secrets.yaml           # (mit sops verschlüsselt)
-└── bootstrap-install.sh       # Auto-Installation
+└── install.sh                 # Auto-Installation
 ```
 
 ## Installation auf neuem Gerät
 
 ### Voraussetzungen
-- Frische NixOS-Installation mit KDE Plasma
+- Frische NixOS-Installation
 
 ### Schnell-Installation
 
 ```bash
 # Terminal öffnen
-curl -L https://raw.githubusercontent.com/USERNAME/REPO/main/bootstrap-install.sh -o bootstrap.sh
-chmod +x bootstrap.sh
-./bootstrap.sh
+curl -L https://raw.githubusercontent.com/Seroleashed/nixos/main/install.sh -o install.sh
+chmod +x install.sh
+./install.sh
 ```
 
 Das Script fragt nach:
-- GitHub Username und Repository
 - Device-Type (VMware/VirtualBox/Laptop/Desktop)
-- Git Name und Email
-
-### Manuelle Installation
-
-```bash
-# Repository klonen
-git clone https://github.com/USERNAME/REPO.git /tmp/nixos-config
-
-# Hardware-Config sichern
-sudo cp /etc/nixos/hardware-configuration.nix /tmp/hw-backup.nix
-
-# Dateien kopieren
-sudo cp /tmp/nixos-config/*.nix /etc/nixos/
-sudo cp /tmp/nixos-config/.sops.yaml /etc/nixos/
-
-# Hardware-Config wiederherstellen
-sudo cp /tmp/hw-backup.nix /etc/nixos/hardware-configuration.nix
-
-# Device-Type setzen
-sudo nano /etc/nixos/device.nix
-
-# sops-key erstellen
-ssh-keygen -t ed25519 -f ~/.ssh/sops-key -N ""
-
-# Git initialisieren
-cd /etc/nixos
-sudo git init
-sudo git add .
-sudo git commit -m "Initial"
-
-# System bauen
-sudo nixos-rebuild switch --flake /etc/nixos#vmware
-```
+- Git User Name und Email
 
 ## Secrets Management mit sops-nix
 
@@ -122,6 +87,57 @@ git add .sops.yaml secrets/
 git commit -m "Add new device key"
 git push
 ```
+
+### Secrets speichern
+#### 1. Füge Secrets in die ./secrets/secrets.yaml ein:
+```yaml
+wifi_password: mein-passwort
+github_token: ghp_xxxxx
+```
+
+#### 2. In configuration.nix nutzen
+```nix
+sops = {
+  defaultSopsFile = ./secrets/secrets.yaml;
+  age.sshKeyPaths = [ "/home/stinooo/.ssh/sops-key" ];
+
+  secrets.wifi_password = {
+    owner = "root";
+  };
+};
+
+# Verwenden
+networking.wireless.networks."WLAN".pskFile = config.sops.secrets.wifi_password.path;
+```
+
+##### 6. System bauen
+"vmware" hier als Beispiel für den DeviceType
+```bash
+sudo nixos-rebuild switch --flake /etc/nixos#vmware
+```
+
+#### Secrets bearbeiten
+
+```bash
+sops /etc/nixos/secrets/secrets.yaml
+```
+
+## ##Neues Gerät hinzufügen
+
+1. Auf neuem Gerät: `ssh-keygen -t ed25519 -f ~/.ssh/sops-key -N ""`
+2. Public Key kopieren: `cat ~/.ssh/sops-key.pub`
+3. Auf altem Gerät: Key zu `.sops.yaml` hinzufügen
+4. Secrets neu verschlüsseln: `sops updatekeys secrets/secrets.yaml`
+5. Committen und pushen
+6. Auf neuem Gerät: Pull und rebuild
+
+#### Secrets-Pfade nach Build
+
+Entschlüsselte Secrets landen in:
+- `/run/secrets/wifi_password`
+- `/run/secrets/github_token`
+
+Nur als angegebener Owner lesbar!
 
 ## System aktualisieren
 

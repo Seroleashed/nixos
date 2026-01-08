@@ -573,6 +573,7 @@
         "comments" = false;
         "strings" = true;
       };
+      "explorer.confirmDelete" = false;
 
       # Theme & Icons
       "workbench.colorTheme" = "Default Dark Modern";

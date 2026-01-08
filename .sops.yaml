@@ -5,14 +5,15 @@ keys:
   # Beispiel: Ersetze mit deinem eigenen Public Key
   # Erstelle Key mit: ssh-keygen -t ed25519 -f ~/.ssh/sops-key -N ""
   # Zeige Key an mit: cat ~/.ssh/sops-key.pub
-  
-  - &main ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... user@hostname
+
+  - &vmware ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJHwt5iNz6KWd3Qc8grIQQebIN4xlSYP352NCZTne6me stinooo@nixos
+
   # Weitere Geräte:
   # - &laptop ssh-ed25519 AAAAC3... user@laptop
 
 creation_rules:
   - path_regex: secrets/.*\.yaml$
     key_groups:
-    - ssh_keys:
-      - *main
-      # - *laptop
+      - ssh_keys:
+          - *vmware
+        # - *laptop
