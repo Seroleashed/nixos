@@ -65,8 +65,6 @@
     theme = "sddm-sugar-dark";  # Breeze Dark ist der Standard
     # Weitere Theme-Optionen möglich
   };
-
-
   
   # X11 ist für Plasma 6 Wayland nicht nötig, aber einige Anwendungen brauchen XWayland
   services.xserver = {
