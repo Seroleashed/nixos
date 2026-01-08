@@ -7,7 +7,7 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     # Home Manager
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
@@ -21,7 +21,14 @@
     };
   };
 
-  outputs = { self, nixpkgs, sops-nix, home-manager, plasma-manager, ... }: {
+  outputs = {
+    self,
+    nixpkgs,
+    sops-nix,
+    home-manager,
+    plasma-manager,
+    ...
+  }: {
     nixosConfigurations = {
       # VMware VM
       vmware = nixpkgs.lib.nixosSystem {
@@ -31,14 +38,14 @@
           ./hardware-configuration.nix
           ./configuration.nix
           ./sops.nix
-          { device.type = "vmware"; }
-          
+          {device.type = "vmware";}
+
           # Home Manager Integration
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "bak";
+            home-manager.backupFileExtension = "backup";
 
             home-manager.sharedModules = [
               sops-nix.homeManagerModules.sops
@@ -48,7 +55,7 @@
           }
         ];
       };
-      
+
       # VirtualBox VM
       virtualbox = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -57,13 +64,13 @@
           ./hardware-configuration.nix
           ./configuration.nix
           ./sops.nix
-          { device.type = "virtualbox"; }
-          
+          {device.type = "virtualbox";}
+
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "bak";
+            home-manager.backupFileExtension = "backup";
 
             home-manager.sharedModules = [
               sops-nix.homeManagerModules.sops
@@ -73,7 +80,7 @@
           }
         ];
       };
-      
+
       # Laptop
       laptop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -82,13 +89,13 @@
           ./hardware-configuration-laptop.nix
           ./configuration.nix
           ./sops.nix
-          { device.type = "laptop"; }
-          
+          {device.type = "laptop";}
+
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "bak";
+            home-manager.backupFileExtension = "backup";
 
             home-manager.sharedModules = [
               sops-nix.homeManagerModules.sops
@@ -98,7 +105,7 @@
           }
         ];
       };
-      
+
       # Desktop PC
       desktop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -107,13 +114,13 @@
           ./hardware-configuration-desktop.nix
           ./configuration.nix
           ./sops.nix
-          { device.type = "desktop"; }
-          
+          {device.type = "desktop";}
+
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "bak";
+            home-manager.backupFileExtension = "backup";
 
             home-manager.sharedModules = [
               sops-nix.homeManagerModules.sops
