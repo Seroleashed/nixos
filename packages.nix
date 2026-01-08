@@ -9,6 +9,7 @@
     # Shell-Tools
     starship
     zoxide
+    pay-respects
     fzf
     ripgrep  # Besseres grep, wird von fzf verwendet
     bat      # Besseres cat mit Syntax-Highlighting
