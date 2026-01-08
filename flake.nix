@@ -56,15 +56,15 @@
         ];
       };
 
-      # VirtualBox VM
-      virtualbox = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+      # Raspberry Pi 4
+      raspberry = nixpkgs.lib.nixosSystem {
+        system = "arm64-linux";
         modules = [
           sops-nix.nixosModules.sops
           ./hardware-configuration.nix
           ./configuration.nix
           ./sops.nix
-          {device.type = "virtualbox";}
+          {device.type = "raspberry";}
 
           home-manager.nixosModules.home-manager
           {
