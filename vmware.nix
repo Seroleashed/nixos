@@ -39,11 +39,11 @@
   # Besonders wichtig für Wayland/Plasma
   systemd.user.services.vmware-user = {
     description = "VMware User Agent for Copy/Paste";
-    wantedBy = [ "graphical-session.target" ];
+    wantedBy = [ "default.target" ];
     after = [ "graphical-session.target" ];
     serviceConfig = {
       Type = "simple";
-      ExecStart = "${pkgs.open-vm-tools}/bin/vmware-user";
+      ExecStart = "${pkgs.open-vm-tools}/bin/vmware-user-suid-wrapper";
       Restart = "always";
       RestartSec = "2";
     };
