@@ -52,17 +52,16 @@
   # Intel GPU Unterstüzung
   services.xserver.videoDrivers = ["intel"];
 
-  hardware.opengl = {
+  hardware.graphics = {
     extraPackages = with pkgs; [
       intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      vaapiIntel # LIBVA_DRIVER_NAME=i95 (older)
-      vaapiVdpau
+      intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older)
       libvdpau-va-gl
       intel-compute-runtime # OpenCL
     ];
-    extraPackages32 = with pkgs.pkgsi686Linux; [
+    extraPackages32 = with pkgs.driversi686Linux; [
       intel-media-driver
-      vaapiIntel
+      intel-vaapi-driver
     ];
   };
 

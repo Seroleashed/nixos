@@ -59,10 +59,9 @@
   boot.kernelModules = ["tcp_nnr"];
 
   # OpenGL/Vulkan Support
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32bit = true; # für 32 bit Spiele
+    enable32Bit = true; # für 32 bit Spiele
   };
 
   # GameMode
@@ -182,12 +181,6 @@
 
   # Printing
   services.printing.enable = true;
-
-  # Graphics
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-  };
 
   # User account
   users.users.stinooo = {

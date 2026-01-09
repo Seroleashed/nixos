@@ -52,9 +52,8 @@
     package = config.boot.kernelPackages.nvidiaPackages.production;
   };
 
-  hardware.opengl = {
+  hardware.graphics = {
     extraPackages = with pkgs; [
-      vaapiVdpau
       libvdpau-va-gl
     ];
   };

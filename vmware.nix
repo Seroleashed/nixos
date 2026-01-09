@@ -62,7 +62,7 @@
   # Standard Linux Kernel für VM aktivieren (kein Zen)
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  hardware.opengl = {
+  hardware.graphics = {
     extraPackages = with pkgs; [
       mesa
     ];
