@@ -6,6 +6,12 @@
   # VMware Guest Tools - Dies aktiviert automatisch open-vm-tools
   virtualisation.vmware.guest.enable = true;
 
+  # Open VM Tools explizit installieren (für manuelle Tools)
+  environment.systemPackages = with pkgs; [
+    open-vm-tools
+    gtkmm3
+  ];
+
   # Video Driver
   services.xserver = {
     enable = true;
@@ -13,27 +19,21 @@
     modules = [ pkgs.xorg.xf86inputvmmouse ];
   };
 
-  # Open VM Tools explizit installieren (für manuelle Tools)
-  environment.systemPackages = with pkgs; [
-    open-vm-tools
-    gtkmm3
-  ];
-
   # Services für Copy/Paste und Integration
   # Diese werden durch virtualisation.vmware.guest.enable automatisch gestartet,
   # aber wir definieren sie explizit für bessere Kontrolle
 
-  systemd.services.vmtoolsd = {
-    description = "VMware Tools Daemon";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${pkgs.open-vm-tools}/bin/vmtoolsd";
-      Restart = "always";
-      TimeoutStopSec = "5";
-    };
-  };
+  # systemd.services.vmtoolsd = {
+  #   description = "VMware Tools Daemon";
+  #   wantedBy = [ "multi-user.target" ];
+  #   after = [ "network.target" ];
+  #   serviceConfig = {
+  #     Type = "simple";
+  #     ExecStart = "${pkgs.open-vm-tools}/bin/vmtoolsd";
+  #     Restart = "always";
+  #     TimeoutStopSec = "5";
+  #   };
+  # };
 
   # User-Service für Copy/Paste in grafischer Umgebung (wichtig!)
   # Besonders wichtig für Wayland/Plasma
