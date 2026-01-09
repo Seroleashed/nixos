@@ -42,14 +42,6 @@
   # Firefox
   programs.firefox.enable = true;
 
-  # Steam Konfiguration
-  programs.steam = {
-    enable = true;
-    extraCompatPackages = with pkgs; [
-      proton-ge-bin # Letzte stabile Version aus nixpkgs
-    ];
-  };
-
   # Git Configuration (mit gh Integration)
   programs.git = {
     enable = true;

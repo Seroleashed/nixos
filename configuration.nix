@@ -195,6 +195,14 @@
   users.defaultUserShell = pkgs.zsh;
   programs.zsh.enable = true;
 
+  # Steam Konfiguration
+  programs.steam = {
+    enable = true;
+    extraCompatPackages = with pkgs; [
+      proton-ge-bin # Letzte stabile Version aus nixpkgs
+    ];
+  };
+
   # Fonts
   fonts.packages = with pkgs; [
     nerd-fonts.fira-mono
