@@ -55,7 +55,7 @@
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       ExecStart = "${pkgs.open-vm-tools}/bin/vmware-vmblock-fuse -o subtype=vmware-vmblock,default_permissions,allow_other /run/vmblock-fuse";
-      ExecStop = "${pkgs.utillinux}/bin/umount -l /run/vmblock-fuse";
+      ExecStop = "${pkgs.util-linux}/bin/umount -l /run/vmblock-fuse";
       Restart = "always";
     };
   };
