@@ -1,7 +1,10 @@
-{ config, lib, pkgs, ... }:
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 # VMware Workstation/Player specific configuration
-
 {
   # VMware Guest Tools - Dies aktiviert automatisch open-vm-tools
   virtualisation.vmware.guest.enable = true;
@@ -15,32 +18,25 @@
   # Video Driver
   services.xserver = {
     enable = true;
-    videoDrivers = [ "vmware" ];
-    modules = [ pkgs.xorg.xf86inputvmmouse ];
+    videoDrivers = ["vmware"];
+    modules = [pkgs.xorg.xf86inputvmmouse];
   };
 
-  # Services für Copy/Paste und Integration
-  # Diese werden durch virtualisation.vmware.guest.enable automatisch gestartet,
-  # aber wir definieren sie explizit für bessere Kontrolle
+  # reduziere swappiness für VM
+  boot.kernel.sysctl."vm.swappiness" = 1;
 
-  # systemd.services.vmtoolsd = {
-  #   description = "VMware Tools Daemon";
-  #   wantedBy = [ "multi-user.target" ];
-  #   after = [ "network.target" ];
-  #   serviceConfig = {
-  #     Type = "simple";
-  #     ExecStart = "${pkgs.open-vm-tools}/bin/vmtoolsd";
-  #     Restart = "always";
-  #     TimeoutStopSec = "5";
-  #   };
-  # };
+  # CPU-Governor für VM (ondemand ist besser für VM)
+  powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
+
+  # keine GameMode CPU-Optimierung in VM (wenig sinnvoll)
+  programs.gamemode.settings.general.renice = 0;
 
   # User-Service für Copy/Paste in grafischer Umgebung (wichtig!)
   # Besonders wichtig für Wayland/Plasma
   systemd.user.services.vmware-user = {
     description = "VMware User Agent for Copy/Paste";
-    wantedBy = [ "default.target" ];
-    after = [ "graphical-session.target" ];
+    wantedBy = ["default.target"];
+    after = ["graphical-session.target"];
     serviceConfig = {
       Type = "simple";
       ExecStart = "${pkgs.open-vm-tools}/bin/vmware-user-suid-wrapper";
@@ -51,8 +47,8 @@
 
   systemd.services.vmware-vmblock-fuse = {
     description = "VMware VMBLOCK fuse";
-    after = [ "multi-user.target" ];
-    wantedBy = [ "multi-user.target" ];
+    after = ["multi-user.target"];
+    wantedBy = ["multi-user.target"];
     serviceConfig = {
       ExecStart = "${pkgs.open-vm-tools}/bin/vmware-vmblock-fuse -o subtype=vmware-vmblock,default_permissions,allow_other /run/vmblock-fuse";
       ExecStop = "${pkgs.util-linux}/bin/umount -l /run/vmblock-fuse";
@@ -61,7 +57,21 @@
   };
 
   # VMCI (Virtual Machine Communication Interface) für bessere Integration
-  boot.kernelModules = [ "vmw_vsock_vmci_transport" "vmw_vmci" "vmwgfx" ];
+  boot.kernelModules = ["vmw_vsock_vmci_transport" "vmw_vmci" "vmwgfx"];
+
+  # Standard Linux Kernel für VM aktivieren (kein Zen)
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  hardware.opengl = {
+    extraPackages = with pkgs; [
+      mesa
+    ];
+  };
+
+  # filesystem Optimierungen
+  fileSystems."/" = {
+    options = lib.mkForce ["noatime"];
+  };
 
   # Shared Folders Support (optional, auskommentiert)
   # Aktiviere dies wenn du Shared Folders zwischen Host und Guest nutzen möchtest:

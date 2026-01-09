@@ -18,10 +18,37 @@
     # Nix Language Server für VS Code
     nil
     alejandra
+
+    # Gaming-Tools
+    gamemode
+    gamescope
+
+    # Launcher und Stores
+    bottles
+
+    # Utilities
+    protonup-qt # Proton-GE Updater
+    protontricks # Winetricks für Proton
+    steamtinkerlaunch # Advanced Steam launch Options
+
+    # Performance Monitoring
+    nvtop
+    # htop als system package
+    iotop
+
+    # generelle Tools
   ];
 
   # Firefox
   programs.firefox.enable = true;
+
+  # Steam Konfiguration
+  programs.steam = {
+    enable = true;
+    extraCompatPackages = with pkgs; [
+      proton-ge-bin # Letzte stabile Version aus nixpkgs
+    ];
+  };
 
   # Git Configuration (mit gh Integration)
   programs.git = {
