@@ -10,7 +10,7 @@
   services.xserver = {
     enable = true;
     videoDrivers = [ "vmware" ];
-    modules = [ pkgs.xorg.xf86inputvmouse ];
+    modules = [ pkgs.xorg.xf86inputvmmouse ];
   };
 
   # Open VM Tools explizit installieren (für manuelle Tools)
